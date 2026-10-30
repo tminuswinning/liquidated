@@ -4,6 +4,7 @@ import { HyperliquidClient } from "./data/hyperliquidClient";
 import { FlowAggregator } from "./flow/flowAggregator";
 import { SignalEngine } from "./signals/signalEngine";
 import type { AssetContext, ConnectionStatus, CoreMarket, FlowSignal, Market, ScannerSettings, TradeEvent } from "./types";
+import { renderIcons } from "./ui/icons";
 import { formatPrice, money } from "./utils/format";
 import { LiquidRenderer } from "./visual/liquidRenderer";
 import "./../styles.css";
@@ -13,6 +14,8 @@ if (!(canvasElement instanceof HTMLCanvasElement)) {
   throw new Error("Missing flow canvas");
 }
 const canvas: HTMLCanvasElement = canvasElement;
+
+renderIcons();
 
 const landing = document.querySelector<HTMLElement>("#landing");
 const landingHero = document.querySelector<HTMLElement>(".landing-hero");
@@ -39,23 +42,44 @@ if (landing && "IntersectionObserver" in window) {
   landing.querySelectorAll(".reveal").forEach((section) => revealObserver.observe(section));
 }
 
+const LANDING_REVEAL_MS = 950;
+
 function enterInstrument(event: Event): void {
   // Pointer/click activation is the reliable window for unlocking Web Audio,
   // especially on iOS. Prime before DOM work and the async WASM load.
   audio.prime();
   audioMuted = false;
-  const market = (event.currentTarget as HTMLElement).dataset.enterMarket as Market | undefined;
+  const trigger = event.currentTarget as HTMLElement;
+  const market = trigger.dataset.enterMarket as Market | undefined;
   if (market && market !== settings.market) setMarket(market);
-  if ((event.currentTarget as HTMLElement).hasAttribute("data-open-picker")) {
-    window.setTimeout(() => elements.pairMenu.setAttribute("open", ""), 750);
+  if (trigger.hasAttribute("data-open-picker")) {
+    window.setTimeout(() => elements.pairMenu.setAttribute("open", ""), LANDING_REVEAL_MS + 100);
   }
+
+  // The landing opens from the click point like a drop spreading out: it is
+  // masked away in a growing circle while the field underneath takes a real
+  // ripple at the same spot. Keyboard activation starts from the button centre.
+  const origin = revealOrigin(event, trigger);
+  landing?.style.setProperty("--reveal-x", `${origin.x}px`);
+  landing?.style.setProperty("--reveal-y", `${origin.y}px`);
+
   appShell.prepend(canvas);
   renderer?.resume(settings);
   renderer?.setLiquidParams(readLiquidParams());
+  renderer?.pointer(origin.x / window.innerWidth, origin.y / window.innerHeight, { strength: 2.2, radius: 180, glow: true });
   document.body.classList.remove("landing-active");
-  document.body.classList.add("instrument-active");
+  document.body.classList.add("instrument-active", "instrument-entering");
   void setMode("live");
-  window.setTimeout(() => landing?.setAttribute("hidden", ""), 700);
+  window.setTimeout(() => {
+    landing?.setAttribute("hidden", "");
+    document.body.classList.remove("instrument-entering");
+  }, LANDING_REVEAL_MS);
+}
+
+function revealOrigin(event: Event, trigger: HTMLElement): { x: number; y: number } {
+  if (event instanceof MouseEvent && event.detail > 0) return { x: event.clientX, y: event.clientY };
+  const rect = trigger.getBoundingClientRect();
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
 }
 
 enterButtons.forEach((button) => button.addEventListener("click", enterInstrument));

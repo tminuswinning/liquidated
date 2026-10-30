@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "dat.gui": "^0.7.9",
+    "lucide": "^0.546.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.184.0",

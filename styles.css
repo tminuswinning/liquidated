@@ -161,6 +161,11 @@ input {
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 
+.info-link svg {
+  width: 14px;
+  height: 14px;
+}
+
 .info-link:hover {
   border-color: var(--line);
   color: var(--buy);
@@ -321,10 +326,26 @@ input {
   width: min(260px, calc(100vw - 32px));
 }
 
+.pair-search-wrap {
+  position: relative;
+  display: block;
+}
+
+.pair-search-wrap svg {
+  position: absolute;
+  top: 50%;
+  left: 9px;
+  width: 13px;
+  height: 13px;
+  color: rgba(239, 255, 249, 0.45);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
 .pair-search {
   width: 100%;
   height: 30px;
-  padding: 0 9px;
+  padding: 0 9px 0 28px;
   border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.04);
@@ -689,9 +710,19 @@ button {
   order: 13;
 }
 
+.resonator-menu summary svg,
+.liquid-menu summary svg {
+  width: 13px;
+  height: 13px;
+  opacity: .7;
+}
+
 .resonator-menu summary,
 .liquid-menu summary {
   display: grid;
+  grid-auto-flow: column;
+  gap: 7px;
+  white-space: nowrap;
   height: 100%;
   min-width: 122px;
   place-items: center;
@@ -1236,23 +1267,36 @@ button {
   transition: color 150ms ease, background-color 150ms ease, transform 120ms cubic-bezier(.23, 1, .32, 1);
 }
 
-.sound-state-dot {
-  flex: 0 0 7px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #64645f;
-  box-shadow: none;
-  transition: background-color 150ms ease, box-shadow 150ms ease;
+/* Lucide icon per audio state; only the matching one is shown. */
+.sound-icon {
+  display: inline-grid;
+  flex: 0 0 14px;
 }
 
-.mute-button[data-audio-state="on"] .sound-state-dot {
-  background: var(--buy);
-  box-shadow: 0 0 8px rgba(53, 214, 166, 0.82), 0 0 2px rgba(53, 214, 166, 0.92);
+.sound-icon svg {
+  grid-area: 1 / 1;
+  width: 14px;
+  height: 14px;
+  opacity: 0;
 }
 
-.mute-button[data-audio-state="starting"] .sound-state-dot {
-  background: #8d654e;
+.mute-button[data-audio-state="muted"] .sound-icon-off,
+.mute-button[data-audio-state="error"] .sound-icon-off,
+.mute-button[data-audio-state="on"] .sound-icon-on,
+.mute-button[data-audio-state="starting"] .sound-icon-starting {
+  opacity: 1;
+}
+
+.mute-button[data-audio-state="on"] .sound-icon-on {
+  color: var(--buy);
+}
+
+.mute-button[data-audio-state="starting"] .sound-icon-starting {
+  animation: icon-spin 900ms linear infinite;
+}
+
+@keyframes icon-spin {
+  to { transform: rotate(360deg); }
 }
 
 .mute-button[data-audio-state="error"] { color: #9a9892; }
@@ -1322,13 +1366,42 @@ button {
   color: var(--l-ink);
   font-family: var(--l-sans);
   -webkit-font-smoothing: antialiased;
-  transition: opacity 600ms ease, transform 700ms var(--l-ease);
+}
+
+/* Entering the instrument: the landing is cut away in a circle growing from
+   the click point (--reveal-x/y, set in main.ts) with a soft edge, revealing
+   the field that main.ts has already moved into the app shell. */
+@property --reveal-r {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
 }
 
 .instrument-active .landing {
-  opacity: 0;
-  transform: translateY(-2%);
+  --reveal-mask: radial-gradient(circle at var(--reveal-x, 50%) var(--reveal-y, 50%), transparent var(--reveal-r), #000 calc(var(--reveal-r) + 64px));
+  /* Transparent so the hero shows the moved field, not a dark gap. */
+  background: transparent;
   pointer-events: none;
+  -webkit-mask-image: var(--reveal-mask);
+  mask-image: var(--reveal-mask);
+  animation: landing-reveal 950ms cubic-bezier(.65, 0, .35, 1) forwards;
+}
+
+@keyframes landing-reveal {
+  to { --reveal-r: 150vmax; }
+}
+
+/* The instrument's controls wait for the reveal, then fade in. */
+body.instrument-entering .app-shell > :not(#flowCanvas) {
+  visibility: hidden;
+}
+
+body.instrument-active:not(.instrument-entering) .app-shell > :not(#flowCanvas) {
+  animation: instrument-ui-in 420ms ease-out both;
+}
+
+@keyframes instrument-ui-in {
+  from { opacity: 0; }
 }
 
 body.landing-active .app-shell > :not(#flowCanvas) {
@@ -1418,7 +1491,9 @@ body.landing-active .app-shell > :not(#flowCanvas) {
   transition: background-color 160ms ease-out, transform 160ms var(--l-ease);
 }
 
-.landing-cta span {
+.landing-cta svg {
+  width: 17px;
+  height: 17px;
   transition: transform 220ms var(--l-ease);
 }
 
@@ -1426,7 +1501,7 @@ body.landing-active .app-shell > :not(#flowCanvas) {
   background: #fff;
 }
 
-.landing-cta:hover span {
+.landing-cta:hover svg {
   transform: translateX(3px);
 }
 
@@ -1582,6 +1657,12 @@ body.landing-active .app-shell > :not(#flowCanvas) {
   text-underline-offset: 5px;
 }
 
+.landing-link--docs svg {
+  width: 15px;
+  height: 15px;
+  vertical-align: -2px;
+}
+
 .landing-link--docs:hover {
   text-decoration-color: currentColor;
 }
@@ -1641,10 +1722,10 @@ body.landing-active .app-shell > :not(#flowCanvas) {
   font-size: 15px;
 }
 
-.market-picks i {
+.market-picks svg {
+  width: 22px;
+  height: 22px;
   color: var(--l-muted);
-  font-size: 22px;
-  font-style: normal;
   transition: color 200ms ease-out, transform 300ms var(--l-ease);
 }
 
@@ -1662,7 +1743,7 @@ body.landing-active .app-shell > :not(#flowCanvas) {
     transform: translateX(6px);
   }
 
-  .market-picks button:hover i {
+  .market-picks button:hover svg {
     color: var(--l-ink);
     transform: translateX(4px);
   }
@@ -1723,8 +1804,13 @@ body.landing-active .app-shell > :not(#flowCanvas) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing {
-    transition: none;
+  .instrument-active .landing {
+    animation: none;
+    opacity: 0;
+  }
+
+  body.instrument-active:not(.instrument-entering) .app-shell > :not(#flowCanvas) {
+    animation: none;
   }
 }
 

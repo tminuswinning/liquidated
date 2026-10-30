@@ -32,7 +32,7 @@
             <div class="hero-actions">
               <button class="landing-cta" type="button" data-enter-app>
                 Enter instrument
-                <span aria-hidden="true">&rarr;</span>
+                <i data-lucide="arrow-right"></i>
               </button>
               <a class="landing-link" href="#mapping">How it works</a>
             </div>
@@ -43,7 +43,7 @@
           <div class="section-head">
             <h2>One trade, two outputs.</h2>
             <p class="section-lede">Every public order is read once. Its side, size and price drive the field and the sound together.</p>
-            <a class="landing-link landing-link--docs" href="https://liquidated.gitbook.io/docs/" target="_blank" rel="noopener noreferrer">Read the docs <span aria-hidden="true">&nearr;</span></a>
+            <a class="landing-link landing-link--docs" href="https://liquidated.gitbook.io/docs/" target="_blank" rel="noopener noreferrer">Read the docs <i data-lucide="arrow-up-right"></i></a>
           </div>
           <table class="map-table">
             <thead>
@@ -75,11 +75,11 @@
             <p>Public trade data only. No wallet, no account, no orders. Sound starts when you enter.</p>
           </div>
           <div class="market-picks" aria-label="Enter the instrument on a market">
-            <button type="button" data-enter-app data-enter-market="BTC"><b>BTC</b><span>Bitcoin</span><i aria-hidden="true">&rarr;</i></button>
-            <button type="button" data-enter-app data-enter-market="ETH"><b>ETH</b><span>Ethereum</span><i aria-hidden="true">&rarr;</i></button>
-            <button type="button" data-enter-app data-enter-market="SOL"><b>SOL</b><span>Solana</span><i aria-hidden="true">&rarr;</i></button>
-            <button type="button" data-enter-app data-enter-market="HYPE"><b>HYPE</b><span>Hyperliquid</span><i aria-hidden="true">&rarr;</i></button>
-            <button class="market-picks-all" type="button" data-enter-app data-open-picker><b>All markets</b><span data-market-count>Every Hyperliquid perp</span><i aria-hidden="true">&rarr;</i></button>
+            <button type="button" data-enter-app data-enter-market="BTC"><b>BTC</b><span>Bitcoin</span><i data-lucide="arrow-right"></i></button>
+            <button type="button" data-enter-app data-enter-market="ETH"><b>ETH</b><span>Ethereum</span><i data-lucide="arrow-right"></i></button>
+            <button type="button" data-enter-app data-enter-market="SOL"><b>SOL</b><span>Solana</span><i data-lucide="arrow-right"></i></button>
+            <button type="button" data-enter-app data-enter-market="HYPE"><b>HYPE</b><span>Hyperliquid</span><i data-lucide="arrow-right"></i></button>
+            <button class="market-picks-all" type="button" data-enter-app data-open-picker><b>All markets</b><span data-market-count>Every Hyperliquid perp</span><i data-lucide="arrow-right"></i></button>
           </div>
         </section>
       </div>
@@ -107,7 +107,10 @@
         <details class="pair-menu">
           <summary id="symbolSummary">BTC</summary>
           <div class="pair-options" aria-label="Instrument">
-            <input id="pairSearch" class="pair-search" type="search" placeholder="Search markets" aria-label="Search markets" autocomplete="off" spellcheck="false">
+            <label class="pair-search-wrap">
+              <i data-lucide="search"></i>
+              <input id="pairSearch" class="pair-search" type="search" placeholder="Search markets" aria-label="Search markets" autocomplete="off" spellcheck="false">
+            </label>
             <div id="pairList" class="pair-list">
               <button type="button" data-market="BTC"><span class="pair-symbol">BTC</span></button>
               <button type="button" data-market="ETH"><span class="pair-symbol">ETH</span></button>
@@ -153,14 +156,18 @@
         </details>
         <div class="segment" aria-label="Sound">
           <button id="muteButton" class="mute-button" type="button" aria-pressed="false" aria-label="Turn sound on" data-audio-state="muted">
-            <span class="sound-state-dot" aria-hidden="true"></span>
+            <span class="sound-icon" aria-hidden="true">
+              <i data-lucide="volume-x" class="sound-icon-off"></i>
+              <i data-lucide="volume-2" class="sound-icon-on"></i>
+              <i data-lucide="loader-circle" class="sound-icon-starting"></i>
+            </span>
             <span id="muteLabel">Sound off</span>
           </button>
           <span id="statusLight" class="status-light"></span>
           <span id="statusText">Connecting</span>
         </div>
         <details class="resonator-menu">
-          <summary>Audio settings</summary>
+          <summary><i data-lucide="sliders-horizontal"></i>Audio settings</summary>
           <div class="resonator-controls">
             <label>
               <span>Max voices</span>
@@ -211,7 +218,7 @@
           </div>
         </details>
         <details class="liquid-menu">
-          <summary>Liquid settings</summary>
+          <summary><i data-lucide="waves"></i>Liquid settings</summary>
           <div class="liquid-controls">
             <label>
               <span>mouseSize</span>
@@ -266,7 +273,7 @@
         </div>
       </aside>
 
-      <a class="info-link" href="https://liquidated.gitbook.io/docs/" target="_blank" rel="noopener noreferrer" aria-label="Liquidated documentation on GitBook" title="Liquidated documentation on GitBook">i</a>
+      <a class="info-link" href="https://liquidated.gitbook.io/docs/" target="_blank" rel="noopener noreferrer" aria-label="Liquidated documentation on GitBook" title="Liquidated documentation on GitBook"><i data-lucide="info"></i></a>
 
     </main>
 
