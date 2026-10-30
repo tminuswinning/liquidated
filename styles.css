@@ -1,0 +1,1838 @@
+:root {
+  color-scheme: dark;
+  --bg: #080909;
+  --panel: rgba(13, 13, 12, 0.78);
+  --panel-strong: rgba(15, 14, 13, 0.91);
+  --panel-soft: rgba(255, 255, 255, 0.035);
+  --line: rgba(53, 214, 166, 0.18);
+  --line-soft: rgba(255, 255, 255, 0.09);
+  --text: #f2f0ec;
+  --muted: #777671;
+  --buy: #35d6a6;
+  --sell: #d87a45;
+  --liq: #c9a179;
+  --cyan: #b69a83;
+  --violet: #9b8d82;
+  --shadow: 0 18px 70px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+.app-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 620px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(91, 255, 214, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 255, 214, 0.026) 1px, transparent 1px),
+    linear-gradient(145deg, #020506 0%, #061111 46%, #030607 100%);
+  background-size: 52px 52px, 52px 52px, auto;
+}
+
+.app-shell::before,
+.app-shell::after {
+  display: none;
+}
+
+.app-shell::before {
+  background:
+    linear-gradient(180deg, rgba(2, 5, 6, 0.18), transparent 18%, transparent 72%, rgba(2, 5, 6, 0.72)),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.026) 0 1px, transparent 1px 6px);
+  mix-blend-mode: screen;
+  opacity: 0.45;
+}
+
+.app-shell::after {
+  border: 1px solid rgba(128, 255, 221, 0.08);
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.8);
+}
+
+#flowCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.feed-panel,
+.feed-control,
+.feed-toggle,
+.segment,
+.audio-button,
+.resonator-menu,
+.liquid-menu,
+.side-panel {
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  background: rgba(4, 9, 10, 0.38);
+  backdrop-filter: blur(10px) saturate(0.92);
+}
+
+.feed-panel {
+  position: absolute;
+  z-index: 4;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  width: calc(100vw - min(360px, max(260px, 18vw)) - 28px);
+  max-width: 980px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.brand-logo {
+  display: block;
+  width: min(150px, max(104px, 7.5vw));
+  height: auto;
+  margin: 0;
+  background: transparent;
+  object-fit: contain;
+  object-position: left center;
+  filter: brightness(0) invert(1);
+}
+
+.brand-home {
+  display: block;
+  flex: 0 0 auto;
+  margin-right: 16px;
+  border-radius: 4px;
+  line-height: 0;
+}
+
+.brand-home:focus-visible {
+  outline: 2px solid var(--buy);
+  outline-offset: 4px;
+}
+
+/* Small "i" circle linking to the GitHub documentation — pinned bottom-left */
+.info-link {
+  position: fixed;
+  z-index: 8;
+  left: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: rgba(4, 9, 10, 0.55);
+  color: rgba(239, 255, 249, 0.78);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  /* The italic serif "i" leans right, so nudge the glyph back to the optical centre of the circle */
+  padding-right: 2px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.info-link:hover {
+  border-color: var(--line);
+  color: var(--buy);
+}
+
+/* Mobile-only chrome — hidden on desktop, activated in the max-width media query. */
+.burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  width: 40px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  background: rgba(4, 9, 10, 0.55);
+  cursor: pointer;
+}
+
+.burger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--text);
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.app-shell.menu-open .burger span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.app-shell.menu-open .burger span:nth-child(2) {
+  opacity: 0;
+}
+
+.app-shell.menu-open .burger span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.tape-handle {
+  display: none;
+}
+
+.row-break {
+  display: none;
+}
+
+.feed-control {
+  display: grid;
+  gap: 3px;
+  min-width: 76px;
+  height: 32px;
+  padding: 4px 7px;
+  border-radius: 6px;
+}
+
+.pair-menu {
+  position: relative;
+  height: 32px;
+  min-width: 78px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 6px;
+  background: rgba(4, 9, 10, 0.38);
+  backdrop-filter: blur(10px) saturate(0.92);
+}
+
+.pair-menu summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 10px;
+  color: var(--text);
+  cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 850;
+  list-style: none;
+}
+
+.pair-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Down-chevron hinting the dropdown; flips when open */
+.pair-menu summary::after,
+.group-menu summary::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid rgba(239, 255, 249, 0.6);
+  transition: transform 0.15s ease;
+}
+
+.pair-menu[open] summary::after,
+.group-menu[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.pair-menu[open] {
+  border-color: rgba(239, 255, 249, 0.22);
+}
+
+/* Any open dropdown lifts its whole box (incl. the absolute popup) above the
+   neighbouring controls and the mobile tape sheet so it's never covered. */
+.pair-menu[open],
+.group-menu[open],
+.resonator-menu[open],
+.liquid-menu[open] {
+  z-index: 30;
+}
+
+.pair-options {
+  position: absolute;
+  z-index: 8;
+  top: calc(100% + 8px);
+  left: 0;
+  display: grid;
+  gap: 4px;
+  min-width: 96px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  background: rgba(4, 9, 10, 0.9);
+  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(14px) saturate(1.04);
+}
+
+.pair-options button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 7px;
+  min-height: 26px;
+  padding: 0 7px;
+  border-radius: 5px;
+  background: transparent;
+  color: rgba(239, 255, 249, 0.78);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 850;
+  text-align: left;
+}
+
+.pair-options button.active {
+  background: rgba(66, 245, 182, 0.1);
+  color: var(--buy);
+}
+
+/* Searchable list of every Hyperliquid perp, sorted by 24h volume. */
+.pair-options {
+  width: min(260px, calc(100vw - 32px));
+}
+
+.pair-search {
+  width: 100%;
+  height: 30px;
+  padding: 0 9px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font: 600 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  outline: none;
+}
+
+.pair-search:focus {
+  border-color: rgba(53, 214, 166, 0.45);
+}
+
+.pair-search::placeholder {
+  color: rgba(239, 255, 249, 0.42);
+}
+
+.pair-list {
+  display: grid;
+  gap: 2px;
+  max-height: min(56vh, 420px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.pair-symbol small {
+  margin-left: 6px;
+  color: rgba(239, 255, 249, 0.45);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pair-volume {
+  color: rgba(239, 255, 249, 0.45);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pair-options button:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pair-empty {
+  margin: 6px 7px;
+  color: rgba(239, 255, 249, 0.5);
+  font: 600 11px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.group-control {
+  min-width: 126px;
+  width: 126px;
+}
+
+.group-control select {
+  font-size: 10px;
+}
+
+.group-menu {
+  position: relative;
+  height: 32px;
+  min-width: 112px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 6px;
+  background: rgba(4, 9, 10, 0.38);
+  backdrop-filter: blur(10px) saturate(0.92);
+}
+
+.group-menu summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 7px;
+  height: 100%;
+  padding: 4px 9px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.group-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.group-menu summary span,
+.group-options span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.group-menu[open] {
+  border-color: rgba(239, 255, 249, 0.22);
+}
+
+.group-options {
+  position: absolute;
+  z-index: 8;
+  top: calc(100% + 8px);
+  left: 0;
+  display: grid;
+  grid-template-columns: 86px 94px;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  background: rgba(4, 9, 10, 0.9);
+  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(14px) saturate(1.04);
+}
+
+.group-options div {
+  display: grid;
+  gap: 4px;
+}
+
+.group-options button {
+  min-height: 24px;
+  padding: 0 7px;
+  border-radius: 5px;
+  background: transparent;
+  color: rgba(239, 255, 249, 0.72);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.group-options button.active {
+  background: rgba(66, 245, 182, 0.1);
+  color: var(--buy);
+}
+
+.range-control {
+  position: relative;
+  grid-template-columns: 34px minmax(112px, 1fr);
+  align-items: center;
+  gap: 6px;
+  min-width: 186px;
+  height: 32px;
+  padding-top: 4px;
+}
+
+.dual-range {
+  position: relative;
+  height: 18px;
+  min-width: 0;
+}
+
+.dual-range::before,
+.dual-range::after {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 8px;
+  height: 4px;
+  border-radius: 999px;
+  content: "";
+}
+
+.dual-range::before {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.dual-range::after {
+  left: var(--range-start, 0%);
+  right: calc(100% - var(--range-end, 100%));
+  background: rgba(239, 255, 249, 0.72);
+}
+
+.range-control input[type="range"] {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.range-control input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: transparent;
+}
+
+.range-control input[type="range"]::-webkit-slider-thumb {
+  width: 13px;
+  height: 13px;
+  margin-top: -4px;
+  border: 1px solid rgba(239, 255, 249, 0.72);
+  border-radius: 999px;
+  appearance: none;
+  background: rgba(239, 255, 249, 0.9);
+  pointer-events: auto;
+}
+
+.range-control input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: transparent;
+}
+
+.range-control input[type="range"]::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border: 1px solid rgba(239, 255, 249, 0.72);
+  border-radius: 999px;
+  background: rgba(239, 255, 249, 0.9);
+  pointer-events: auto;
+}
+
+.range-control b {
+  position: absolute;
+  top: -10px;
+  transform: translateX(-50%);
+  min-width: 34px;
+  overflow: hidden;
+  color: rgba(239, 255, 249, 0.78);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 850;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.dual-range.show-min #minSizeValue,
+.dual-range.show-max #maxSizeValue {
+  opacity: 1;
+}
+
+.feed-control span,
+.metric-grid span,
+.meter-label span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+select {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.segment {
+  display: grid;
+  /* Match the Raw/Aggregated pill (1fr 1.4fr); the trailing auto column holds the live dot */
+  grid-template-columns: 1fr 1.4fr auto;
+  /* Default stretch lets the buttons fill the full pill height, like Raw/Aggregated;
+     the dot is re-centred vertically via align-self below */
+  /* 132px (feed-toggle footprint) + room for the dot, so Off/Live read the same size as Raw/Aggregated */
+  width: 148px;
+  height: 32px;
+  /* Extra right padding gives the live dot a little breathing room from the box edge */
+  padding: 3px 6px 3px 3px;
+  border-radius: 6px;
+  /* Desktop: sit at the right end, after Audio/Liquid settings */
+  order: 14;
+}
+
+/* Live indicator dot lives inside the Off/Live pill, right of Live */
+.segment .status-light {
+  align-self: center;
+  margin-left: 6px;
+}
+
+.segment #statusText {
+  display: none;
+}
+
+.feed-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  width: 132px;
+  height: 32px;
+  padding: 3px;
+  border-radius: 6px;
+}
+
+button {
+  border: 0;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.segment button,
+.feed-toggle button {
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.segment button.active,
+.feed-toggle button.active {
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  color: var(--text);
+}
+
+.audio-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 9px;
+  border-radius: 6px;
+  background: rgba(4, 9, 10, 0.38);
+  font-size: 9px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.audio-button[aria-pressed="true"] {
+  border-color: rgba(66, 245, 182, 0.34);
+}
+
+.audio-dot,
+.status-light {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(239, 255, 249, 0.32);
+  box-shadow: none;
+}
+
+.audio-button[aria-pressed="true"] .audio-dot,
+.status-light.live {
+  color: var(--buy);
+  background: var(--buy);
+}
+
+.status-light.live {
+  color: var(--sell);
+  background: var(--sell);
+  box-shadow: 0 0 8px rgba(255, 95, 125, 0.85), 0 0 2px rgba(255, 95, 125, 0.9);
+}
+
+.resonator-menu,
+.liquid-menu {
+  position: relative;
+  height: 32px;
+  border-radius: 6px;
+  order: 12;
+}
+
+.liquid-menu {
+  order: 13;
+}
+
+.resonator-menu summary,
+.liquid-menu summary {
+  display: grid;
+  height: 100%;
+  min-width: 122px;
+  place-items: center;
+  padding: 0 10px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 850;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.resonator-menu summary::-webkit-details-marker,
+.liquid-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.resonator-menu[open],
+.liquid-menu[open] {
+  border-color: rgba(239, 255, 249, 0.22);
+}
+
+.resonator-controls,
+.liquid-controls {
+  position: absolute;
+  z-index: 8;
+  top: calc(100% + 8px);
+  left: 0;
+  display: grid;
+  gap: 7px;
+  width: min(360px, calc(100vw - 28px));
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  background: rgba(4, 9, 10, 0.9);
+  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(14px) saturate(1.04);
+}
+
+.resonator-controls label,
+.liquid-controls label {
+  display: grid;
+  grid-template-columns: 108px minmax(118px, 1fr) 46px;
+  align-items: center;
+  gap: 8px;
+}
+
+.resonator-controls span,
+.resonator-controls b,
+.liquid-controls span,
+.liquid-controls b {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+}
+
+.resonator-controls span,
+.liquid-controls span {
+  color: var(--muted);
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.resonator-controls b,
+.liquid-controls b {
+  color: var(--text);
+  text-align: right;
+}
+
+.resonator-controls input[type="range"],
+.liquid-controls input[type="range"] {
+  width: 100%;
+  accent-color: rgba(239, 255, 249, 0.8);
+}
+
+.save-audio-settings {
+  min-height: 28px;
+  border-radius: 6px;
+  background: rgba(66, 245, 182, 0.1);
+  color: var(--buy);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.save-audio-settings:hover {
+  background: rgba(66, 245, 182, 0.16);
+}
+
+.side-panel {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: 18vw;
+  min-width: 260px;
+  max-width: 360px;
+  overflow: hidden;
+  padding: 0 0 0;
+  border: 0;
+  background: linear-gradient(90deg, rgba(2, 5, 6, 0), rgba(2, 5, 6, 0.08));
+  backdrop-filter: none;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 8px 7px 0;
+  min-width: 0;
+}
+
+.metric-grid div {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  padding: 4px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.metric-grid strong {
+  display: block;
+  margin-top: 3px;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meter-wrap {
+  display: grid;
+  gap: 5px;
+  padding: 6px 7px 8px;
+}
+
+.meter-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.meter-label strong {
+  font-size: 10px;
+}
+
+.meter {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 95, 125, 0.42), rgba(255, 255, 255, 0.08), rgba(66, 245, 182, 0.42));
+}
+
+.meter-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 0%;
+  background: rgba(239, 255, 249, 0.72);
+  box-shadow: none;
+}
+
+.event-tape {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.event-tape::-webkit-scrollbar {
+  display: none;
+}
+
+.event-tape li {
+  display: grid;
+  grid-template-columns: 42px 1fr 58px 42px 36px;
+  align-items: center;
+  gap: 6px;
+  min-height: 25px;
+  padding: 3px 7px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.event-tape li strong {
+  font-size: 11px;
+  line-height: 1;
+  text-align: right;
+}
+
+.event-tape li.buy {
+  background: rgba(18, 76, 63, 0.08);
+}
+
+.event-tape li.sell {
+  background: rgba(80, 16, 35, 0.08);
+}
+
+.event-tape li span:nth-child(n + 2) {
+  text-align: right;
+}
+
+.event-tape span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.event-tape .buy {
+  color: rgba(104, 255, 209, 0.86);
+}
+
+.event-tape .sell {
+  color: rgba(255, 110, 137, 0.86);
+}
+
+.event-tape .liq {
+  color: var(--liq);
+}
+
+.control-value {
+  overflow: hidden;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 820px) {
+  body {
+    overflow: hidden;
+  }
+
+  .app-shell {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  /* ── Top bar: logo left, off/live + burger right ─────────────────────── */
+  .feed-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    transform: none;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    row-gap: 6px;
+    flex-wrap: wrap;
+    /* Top padding matches the bar→first-menu-row gap (2×row-gap) for symmetry */
+    padding: 12px 14px 10px;
+    background: rgba(3, 8, 9, 0.82);
+    backdrop-filter: blur(12px) saturate(0.9);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Open menu must float above the tape sheet, and its absolute dropdown popups
+     must not be clipped — so keep overflow visible and lift the stacking context. */
+  .app-shell.menu-open .feed-panel {
+    z-index: 9;
+    overflow: visible;
+  }
+
+  /* Forces the dropdown options onto their own rows below the top bar */
+  .row-break {
+    display: block;
+    order: 2;
+    flex: 0 0 100%;
+    height: 0;
+  }
+
+  .brand-home {
+    order: 0;
+    margin-right: auto;
+  }
+
+  .brand-logo {
+    width: 116px;
+  }
+
+  /* Info circle sits bottom-left, just above the metrics sheet — nudged slightly right and down */
+  .info-link {
+    bottom: 110px;
+    left: 18px;
+  }
+
+  .feed-panel > .segment {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
+  .burger {
+    order: 2;
+    display: flex;
+  }
+
+  /* Everything else collapses behind the burger */
+  .feed-panel > .pair-menu,
+  .feed-panel > .feed-toggle,
+  .feed-panel > .range-control,
+  .feed-panel > .group-menu,
+  .feed-panel > .resonator-menu,
+  .feed-panel > .liquid-menu {
+    display: none;
+  }
+
+  /* Dropdown row 1: instrument (left) · raw/aggr · group share one line */
+  .feed-panel > .pair-menu {
+    order: 3;
+    flex: 0 0 auto;
+    min-width: 60px;
+  }
+  .feed-panel > .feed-toggle {
+    order: 4;
+    flex: 0 0 auto;
+    width: auto;
+    grid-template-columns: auto auto;
+  }
+  .feed-panel > .feed-toggle button {
+    padding: 0 11px;
+  }
+  .feed-panel > .group-menu {
+    order: 5;
+    flex: 1 1 auto;
+  }
+
+  /* Remaining controls each get their own full-width row below */
+  .feed-panel > .range-control {
+    order: 6;
+    flex: 1 1 100%;
+  }
+  .feed-panel > .resonator-menu {
+    order: 7;
+    flex: 1 1 100%;
+  }
+  .feed-panel > .liquid-menu {
+    order: 8;
+    flex: 1 1 100%;
+  }
+  .app-shell.menu-open .feed-panel > .pair-menu,
+  .app-shell.menu-open .feed-panel > .group-menu,
+  .app-shell.menu-open .feed-panel > .resonator-menu,
+  .app-shell.menu-open .feed-panel > .liquid-menu {
+    display: block;
+  }
+
+  .app-shell.menu-open .feed-panel > .feed-toggle {
+    display: flex;
+  }
+
+  .app-shell.menu-open .feed-panel > .range-control {
+    display: grid;
+  }
+
+  /* ── Bottom sheet: flow metrics always visible, tape pulls up above them ── */
+  .side-panel {
+    position: fixed;
+    inset: auto 0 0 0;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    height: auto;
+    max-height: 94dvh;
+    z-index: 7;
+    flex-direction: column;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    /* Transparent like the original — only a faint bottom wash to seat the metrics */
+    background: linear-gradient(180deg, rgba(2, 5, 6, 0) 0%, rgba(2, 5, 6, 0.12) 62%, rgba(2, 5, 6, 0.34) 100%);
+    backdrop-filter: none;
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  .tape-handle {
+    display: block;
+    flex: 0 0 auto;
+    width: 100%;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .tape-handle::before {
+    content: "";
+    display: block;
+    width: 44px;
+    height: 5px;
+    margin: 10px auto 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  /* The tape is the collapsible part; the metric grid + pressure below it stay
+     pinned to the bottom of the screen at all times. */
+  .event-tape {
+    flex: 0 0 auto;
+    height: 0;
+    min-height: 0;
+    overflow-y: auto;
+    transition: height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .app-shell.tape-open .event-tape {
+    height: min(56dvh, 460px);
+  }
+
+  .side-panel.dragging .event-tape {
+    transition: none;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 6px 12px;
+  }
+
+  .metric-grid strong {
+    font-size: 12px;
+  }
+
+  .meter-wrap {
+    padding: 6px 12px 14px;
+  }
+}
+
+/* ── Live instrument: shared Giga-inspired visual language ─────────────── */
+.app-shell {
+  background:
+    radial-gradient(ellipse at 18% 88%, rgba(171, 76, 32, 0.14), transparent 32%),
+    radial-gradient(ellipse at 82% 18%, rgba(53, 214, 166, 0.11), transparent 30%),
+    linear-gradient(rgba(53, 214, 166, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(216, 122, 69, 0.018) 1px, transparent 1px),
+    #080909;
+  background-size: auto, auto, 52px 52px, 52px 52px, auto;
+}
+
+.feed-panel,
+.feed-control,
+.feed-toggle,
+.segment,
+.audio-button,
+.resonator-menu,
+.liquid-menu,
+.side-panel,
+.pair-menu {
+  border-color: rgba(255, 255, 255, 0.09);
+  background: rgba(10, 10, 9, 0.56);
+  backdrop-filter: blur(14px) saturate(0.75);
+}
+
+.feed-panel {
+  border-color: transparent;
+  background: transparent;
+  backdrop-filter: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.app-shell,
+.feed-panel,
+.feed-panel button,
+.feed-panel summary {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-kerning: normal;
+}
+
+.feed-panel :is(button, summary, span, b, label) {
+  font-family: inherit;
+}
+
+.feed-panel button,
+.feed-panel summary {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.feed-panel b,
+.feed-panel .control-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.segment {
+  display: flex;
+  align-items: center;
+  width: auto;
+  min-width: 0;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.segment .mute-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 108px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 6px;
+  background: rgba(10, 10, 9, 0.56);
+  color: #c9c7c1;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  transition: color 150ms ease, background-color 150ms ease, transform 120ms cubic-bezier(.23, 1, .32, 1);
+}
+
+.sound-state-dot {
+  flex: 0 0 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #64645f;
+  box-shadow: none;
+  transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.mute-button[data-audio-state="on"] .sound-state-dot {
+  background: var(--buy);
+  box-shadow: 0 0 8px rgba(53, 214, 166, 0.82), 0 0 2px rgba(53, 214, 166, 0.92);
+}
+
+.mute-button[data-audio-state="starting"] .sound-state-dot {
+  background: #8d654e;
+}
+
+.mute-button[data-audio-state="error"] { color: #9a9892; }
+.mute-button:disabled { cursor: wait; opacity: .72; }
+.mute-button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.085); color: #f2f0ec; }
+.mute-button:active:not(:disabled) { transform: scale(.97); }
+.mute-button:focus-visible { outline: 2px solid rgba(213, 146, 88, .75); outline-offset: 2px; }
+
+.segment > .status-light { display: none; }
+.status-light.live {
+  color: var(--buy);
+  background: var(--buy);
+  box-shadow: 0 0 8px rgba(53, 214, 166, 0.78), 0 0 2px rgba(53, 214, 166, 0.85);
+}
+
+.pair-options button.active,
+.group-options button.active,
+.aggregate-option.active {
+  background: rgba(53, 214, 166, 0.1);
+  color: var(--buy);
+}
+
+.event-tape li.buy { background: rgba(53, 214, 166, 0.045); }
+.event-tape li.sell { background: rgba(216, 122, 69, 0.05); }
+.event-tape .buy { color: rgba(99, 229, 187, 0.92); }
+.event-tape .sell { color: rgba(241, 154, 98, 0.92); }
+
+.meter {
+  background: linear-gradient(90deg, rgba(216, 122, 69, 0.56), rgba(255, 255, 255, 0.07), rgba(53, 214, 166, 0.56));
+}
+
+.metric-grid strong,
+.meter-label strong { color: #d5d2cb; }
+.info-link:hover { color: var(--buy); }
+
+@media (max-width: 820px) {
+  .feed-panel { background: rgba(8, 9, 9, 0.86); border-color: rgba(53, 214, 166, 0.14); }
+  .feed-panel > .segment { margin-left: auto; }
+}
+
+/* ── Landing ──────────────────────────────────────────────────────────────
+   The live instrument canvas is the hero image: while the landing is open,
+   main.ts lifts #flowCanvas out of the app shell and it sits full-bleed
+   behind the hero copy. Sections below the hero sit on a solid surface. */
+.landing {
+  --l-bg: #070908;
+  --l-surface: #0b0d0c;
+  --l-ink: #f1efea;
+  --l-soft: rgba(241, 239, 234, .78);
+  --l-muted: #9a9993;
+  --l-line: rgba(241, 239, 234, .1);
+  --l-buy: #63e5bb;
+  --l-sell: #f19a62;
+  --l-gutter: clamp(20px, 4.4vw, 64px);
+  --l-max: 1280px;
+  --l-ease: cubic-bezier(.16, 1, .3, 1);
+  --l-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
+  --l-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  position: fixed;
+  z-index: 2;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: none;
+  /* Opaque: nothing behind the landing (app shell glows) may show through. */
+  background: var(--l-bg);
+  color: var(--l-ink);
+  font-family: var(--l-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: opacity 600ms ease, transform 700ms var(--l-ease);
+}
+
+.instrument-active .landing {
+  opacity: 0;
+  transform: translateY(-2%);
+  pointer-events: none;
+}
+
+body.landing-active .app-shell > :not(#flowCanvas) {
+  visibility: hidden;
+}
+
+/* main.ts moves the canvas into the hero while the landing is open. */
+.landing-hero > #flowCanvas {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.landing a,
+.landing button {
+  color: inherit;
+  font: inherit;
+}
+
+.landing :focus-visible {
+  outline: 2px solid var(--l-buy);
+  outline-offset: 4px;
+}
+
+/* Nav */
+.landing-nav {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 72px;
+  padding: 0 var(--l-gutter);
+}
+
+.landing-brand img,
+.landing-footer img {
+  display: block;
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+
+.landing-brand img {
+  width: 116px;
+}
+
+.landing-nav nav {
+  display: flex;
+  gap: 36px;
+}
+
+.landing-nav nav a,
+.landing-link,
+.landing-footer nav a {
+  color: var(--l-soft);
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 160ms ease-out;
+}
+
+.landing-nav nav a:hover,
+.landing-link:hover,
+.landing-footer nav a:hover {
+  color: var(--l-ink);
+}
+
+.landing-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--l-ink);
+  color: #0a0c0b !important;
+  font-size: 15px !important;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 160ms ease-out, transform 160ms var(--l-ease);
+}
+
+.landing-cta span {
+  transition: transform 220ms var(--l-ease);
+}
+
+.landing-cta:hover {
+  background: #fff;
+}
+
+.landing-cta:hover span {
+  transform: translateX(3px);
+}
+
+.landing-cta:active {
+  transform: scale(.97);
+}
+
+.landing-cta--nav {
+  justify-self: end;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 14px !important;
+}
+
+/* Hero */
+.landing-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  align-items: end;
+  min-height: 100svh;
+  padding: 120px var(--l-gutter) clamp(40px, 7vh, 72px);
+}
+
+/* Scrim so the copy stays legible over whatever the field is doing. */
+.landing-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(to top, var(--l-bg) 0%, rgba(7, 9, 8, 0) 26%),
+    linear-gradient(100deg, rgba(7, 9, 8, .82) 0%, rgba(7, 9, 8, .5) 34%, rgba(7, 9, 8, 0) 62%),
+    linear-gradient(to bottom, rgba(7, 9, 8, .6) 0%, rgba(7, 9, 8, 0) 18%);
+  pointer-events: none;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+}
+
+.landing h1 {
+  margin: 0;
+  font-size: clamp(46px, 6.6vw, 100px);
+  font-weight: 560;
+  letter-spacing: -.04em;
+  line-height: 1;
+}
+
+.landing h1 span {
+  display: block;
+  color: var(--l-sell);
+}
+
+.hero-copy > p {
+  max-width: 34ch;
+  margin: 28px 0 0;
+  color: var(--l-soft);
+  font-size: clamp(17px, 1.35vw, 20px);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-top: 36px;
+}
+
+/* Sections */
+.landing-section,
+.landing-footer {
+  position: relative;
+  background: var(--l-bg);
+}
+
+.landing-section {
+  padding: clamp(96px, 12vw, 168px) var(--l-gutter);
+}
+
+.landing-section > * {
+  max-width: var(--l-max);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.landing h2 {
+  margin: 0;
+  font-size: clamp(36px, 4.6vw, 64px);
+  font-weight: 560;
+  letter-spacing: -.035em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.section-lede,
+.markets-intro p {
+  max-width: 52ch;
+  margin: 24px 0 0;
+  color: var(--l-muted);
+  font-size: 18px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* Mapping table */
+.map-table {
+  width: 100%;
+  margin-top: 72px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.map-table thead th {
+  padding: 0 24px 16px 0;
+  border-bottom: 1px solid var(--l-line);
+  color: var(--l-muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.map-table tbody th,
+.map-table td {
+  padding: 36px 24px 36px 0;
+  border-bottom: 1px solid var(--l-line);
+  vertical-align: baseline;
+}
+
+.map-table tbody th {
+  width: 28%;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 560;
+  letter-spacing: -.03em;
+}
+
+.map-table td {
+  width: 36%;
+  color: var(--l-soft);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.landing-link--docs {
+  display: inline-block;
+  margin-top: 24px;
+  color: var(--l-ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(241, 239, 234, .3);
+  text-underline-offset: 5px;
+}
+
+.landing-link--docs:hover {
+  text-decoration-color: currentColor;
+}
+
+.tone-buy { color: var(--l-buy); }
+.tone-sell { color: var(--l-sell); }
+
+/* Markets */
+.markets {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(48px, 7vw, 120px);
+  align-items: start;
+  padding-right: max(var(--l-gutter), calc((100% - var(--l-max)) / 2));
+  padding-left: max(var(--l-gutter), calc((100% - var(--l-max)) / 2));
+}
+
+.markets > * {
+  max-width: none;
+  margin: 0;
+}
+
+.market-picks {
+  border-top: 1px solid var(--l-line);
+}
+
+.market-picks button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 24px;
+  align-items: center;
+  width: 100%;
+  padding: 26px 4px;
+  border: 0;
+  border-bottom: 1px solid var(--l-line);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 200ms ease-out;
+}
+
+.market-picks b {
+  font-size: clamp(36px, 4.4vw, 60px);
+  font-weight: 560;
+  letter-spacing: -.035em;
+  line-height: 1;
+  transition: color 200ms ease-out, transform 300ms var(--l-ease);
+}
+
+.market-picks .market-picks-all b {
+  font-size: clamp(24px, 2.6vw, 34px);
+  color: var(--l-soft);
+}
+
+.market-picks span {
+  color: var(--l-muted);
+  font-size: 15px;
+}
+
+.market-picks i {
+  color: var(--l-muted);
+  font-size: 22px;
+  font-style: normal;
+  transition: color 200ms ease-out, transform 300ms var(--l-ease);
+}
+
+.market-picks button:active b {
+  transform: scale(.98);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .market-picks button:hover {
+    background: rgba(241, 239, 234, .03);
+  }
+
+  .market-picks button:hover b {
+    color: var(--l-sell);
+    transform: translateX(6px);
+  }
+
+  .market-picks button:hover i {
+    color: var(--l-ink);
+    transform: translateX(4px);
+  }
+}
+
+/* Footer */
+.landing-footer {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 32px;
+  align-items: center;
+  padding: 40px max(var(--l-gutter), calc((100% - var(--l-max)) / 2));
+  border-top: 1px solid var(--l-line);
+}
+
+.landing-footer img {
+  width: 104px;
+  opacity: .8;
+}
+
+.landing-footer p {
+  margin: 0;
+  color: var(--l-muted);
+  font-size: 13px;
+}
+
+.landing-footer nav {
+  display: flex;
+  justify-self: end;
+  gap: 28px;
+}
+
+/* Motion: hero copy settles in once, sections reveal on first scroll-in. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy > * {
+    animation: landing-rise 900ms var(--l-ease) both;
+  }
+
+  .hero-copy > :nth-child(2) { animation-delay: 80ms; }
+  .hero-copy > :nth-child(3) { animation-delay: 160ms; }
+
+  /* Fade the contents, not the section: the section's solid background has to
+     stay opaque or the live canvas behind it flashes through mid-fade. */
+  .landing.can-reveal .reveal > * {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 800ms var(--l-ease), transform 800ms var(--l-ease);
+  }
+
+  .landing.can-reveal .reveal.is-visible > * {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes landing-rise {
+  from { opacity: 0; transform: translateY(18px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing {
+    transition: none;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1020px) {
+  .markets {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Phone */
+@media (max-width: 720px) {
+  .landing-nav {
+    grid-template-columns: 1fr auto;
+    height: 64px;
+  }
+
+  .landing-nav nav {
+    display: none;
+  }
+
+  .landing-brand img {
+    width: 104px;
+  }
+
+  .landing-cta--nav {
+    height: 36px;
+    padding: 0 14px;
+    font-size: 13px !important;
+  }
+
+  .landing-hero {
+    padding-top: 96px;
+    padding-bottom: 32px;
+  }
+
+  .landing-hero::before {
+    background:
+      linear-gradient(to top, var(--l-bg) 0%, rgba(7, 9, 8, .86) 42%, rgba(7, 9, 8, .2) 70%, rgba(7, 9, 8, .5) 100%);
+  }
+
+  .landing h1 {
+    font-size: clamp(40px, 12vw, 56px);
+  }
+
+  .hero-actions {
+    gap: 22px;
+  }
+
+  /* The table becomes one stacked block per trade property. */
+  .map-table,
+  .map-table tbody,
+  .map-table tr,
+  .map-table th,
+  .map-table td {
+    display: block;
+    width: auto;
+  }
+
+  .map-table {
+    margin-top: 48px;
+  }
+
+  .map-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .map-table tr {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--l-line);
+  }
+
+  .map-table tbody th,
+  .map-table td {
+    padding: 0;
+    border: 0;
+  }
+
+  .map-table td {
+    margin-top: 14px;
+    font-size: 16px;
+  }
+
+  .map-table td::before {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--l-muted);
+    font-size: 13px;
+  }
+
+  .map-table td:nth-of-type(1)::before { content: "Field"; }
+  .map-table td:nth-of-type(2)::before { content: "Sound"; }
+
+  .market-picks button {
+    padding: 22px 0;
+  }
+
+  .landing-footer {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    justify-items: start;
+  }
+
+  .landing-footer nav {
+    justify-self: start;
+  }
+}

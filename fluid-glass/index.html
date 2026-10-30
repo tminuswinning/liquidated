@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#060709" />
+    <title>Fluid Glass Study | Liquidated</title>
+  </head>
+  <body>
+    <main class="fluid-study">
+      <canvas id="fluidCanvas" aria-label="Interactive iridescent fluid simulation"></canvas>
+
+      <header class="study-header">
+        <a class="study-brand" href="/" aria-label="Back to Liquidated">
+          <img src="/assets/liquidated_logo.svg" alt="Liquidated" />
+        </a>
+        <span class="study-title">Fluid material study</span>
+      </header>
+
+      <section class="study-controls" aria-label="Simulation controls">
+        <div class="study-status" aria-live="polite">
+          <span class="status-indicator" id="statusIndicator" aria-hidden="true"></span>
+          <span id="statusText">Connecting</span>
+        </div>
+
+        <label class="market-control">
+          <span>Market</span>
+          <select id="marketSelect">
+            <option value="BTC" selected>BTC</option>
+            <option value="ETH">ETH</option>
+            <option value="SOL">SOL</option>
+            <option value="HYPE">HYPE</option>
+          </select>
+        </label>
+
+        <button id="pulseButton" type="button">Disturb surface</button>
+        <button id="pauseButton" type="button" aria-pressed="false">Pause</button>
+      </section>
+
+      <p class="study-note">Move across the surface. Live public trades create the larger pressure waves.</p>
+    </main>
+    <script type="module" src="/src/fluid-glass/main.ts"></script>
+  </body>
+</html>

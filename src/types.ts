@@ -1,0 +1,110 @@
+// The four hand-tuned markets. Every other Hyperliquid perp (main dex and
+// HIP-3 dexes, e.g. "xyz:TSLA") is loaded at runtime, so Market is the API's
+// coin name.
+export type CoreMarket = "BTC" | "ETH" | "SOL" | "HYPE";
+export type Market = string;
+
+export type Side = "buy" | "sell";
+
+export type FlowSignalType =
+  | "largeBuy"
+  | "largeSell"
+  | "buyCluster"
+  | "sellCluster"
+  | "effectiveBuy"
+  | "effectiveSell"
+  | "absorptionBid"
+  | "absorptionAsk"
+  | "cascadeRisk"
+  | "volatilityPulse";
+
+export type ConnectionStatus = "connecting" | "live" | "demo" | "reconnecting" | "error";
+
+export interface TradeEvent {
+  market: Market;
+  side: Side;
+  price: number;
+  size: number;
+  quantity: number;
+  timestamp: number;
+  source: "hyperliquid" | "demo";
+  liquidation?: {
+    markPrice?: number;
+    method?: "market" | "backstop" | string;
+    liquidatedUser?: string;
+  };
+}
+
+export interface LiquidationEvent {
+  market: Market;
+  side: Side;
+  price: number;
+  markPrice?: number;
+  size: number;
+  quantity: number;
+  fills: number;
+  timestamp: number;
+  method?: string;
+  kind?: string;
+  liquidatedUser?: string;
+  liquidator?: string;
+  eventHash?: string;
+  source: "thegraph" | "hyperliquid-user" | "grpc";
+}
+
+export interface BboEvent {
+  market: Market;
+  bid: number;
+  ask: number;
+  mid: number;
+  timestamp: number;
+}
+
+export interface AssetContext {
+  market: Market;
+  markPrice: number;
+  oraclePrice: number;
+  openInterest: number;
+  funding: number;
+  dayVolume: number;
+  timestamp: number;
+}
+
+export interface FlowBucket {
+  market: Market;
+  startedAt: number;
+  endedAt: number;
+  buyVolume: number;
+  sellVolume: number;
+  tradeCount: number;
+  largestTrade: TradeEvent | null;
+  lastPrice: number;
+  previousPrice: number;
+  cvd: number;
+}
+
+export interface FlowSignal {
+  type: FlowSignalType;
+  market: Market;
+  side: Side | "neutral";
+  intensity: number;
+  size: number;
+  price: number;
+  label: string;
+  timestamp: number;
+}
+
+export interface ScannerSettings {
+  market: Market;
+  mode: "live" | "demo";
+  minPrintSize: number;
+  maxPrintSize?: number;
+  sensitivity: number;
+  clusterWindowMs: number;
+  volume: number;
+  timbre: number;
+  space: number;
+  cascadeIntensity: number;
+  viscosity: number;
+  turbulence: number;
+}

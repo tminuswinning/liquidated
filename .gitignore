@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+dist/
+coverage/
+.cache/
+.env
+.env.*
+__pycache__/
+*.pyc
+src/visual/fluid/FluidSimulation 2.ts
+
+# Local Netlify folder
+.netlify
+
+# Local design-tool state and the abandoned standalone docs prototype
+.impeccable/
+documentation/

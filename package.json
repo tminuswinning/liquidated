@@ -1,0 +1,43 @@
+{
+  "name": "liquidated",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Audio-visual crypto flow instrument.",
+  "homepage": "https://liquidated.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tminuswinning/liquidated.git"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "start": "vite --host 0.0.0.0",
+    "build": "tsc && vite build && find dist -name .DS_Store -delete",
+    "build:rings-wasm": "bash scripts/build-rings-wasm.sh",
+    "preview": "vite preview --host 0.0.0.0",
+    "liqs:proto": "python3 -m grpc_tools.protoc -I indexer --python_out=indexer --grpc_python_out=indexer indexer/hyperliquid.proto",
+    "liqs:indexer": "python3 indexer/server.py"
+  },
+  "dependencies": {
+    "dat.gui": "^0.7.9",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.184.0",
+    "tone": "^15.1.22",
+    "vite": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.30",
+    "@types/react-dom": "^18.3.7",
+    "@types/three": "^0.184.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "^5.5.0"
+  },
+  "keywords": [
+    "crypto",
+    "flows",
+    "audio",
+    "visualization",
+    "liquidations"
+  ],
+  "license": "MIT"
+}

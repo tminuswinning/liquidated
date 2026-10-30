@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080a0f">
+    <title>Liquidated</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="landing-active">
+    <section class="landing" id="landing" aria-label="Liquidated">
+      <header class="landing-nav">
+        <a class="landing-brand" href="#landing" aria-label="Liquidated home">
+          <img src="/assets/liquidated_logo.svg" alt="Liquidated">
+        </a>
+        <nav aria-label="Main navigation">
+          <a href="#mapping">How it works</a>
+          <a href="#markets">Markets</a>
+          <a href="https://liquidated.gitbook.io/docs/" target="_blank" rel="noopener noreferrer">Docs</a>
+        </nav>
+        <button class="landing-cta landing-cta--nav" type="button" data-enter-app>Enter instrument</button>
+      </header>
+
+      <div class="landing-main">
+        <section class="landing-hero">
+          <div class="hero-copy">
+            <h1>Market pressure, <span>made physical.</span></h1>
+            <p>Live Hyperliquid order flow, turned into a fluid field you can watch and an instrument you can hear.</p>
+            <div class="hero-actions">
+              <button class="landing-cta" type="button" data-enter-app>
+                Enter instrument
+                <span aria-hidden="true">&rarr;</span>
+              </button>
+              <a class="landing-link" href="#mapping">How it works</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="landing-section mapping reveal" id="mapping">
+          <div class="section-head">
+            <h2>One trade, two outputs.</h2>
+            <p class="section-lede">Every public order is read once. Its side, size and price drive the field and the sound together.</p>
+            <a class="landing-link landing-link--docs" href="https://liquidated.gitbook.io/docs/" target="_blank" rel="noopener noreferrer">Read the docs <span aria-hidden="true">&nearr;</span></a>
+          </div>
+          <table class="map-table">
+            <thead>
+              <tr><th scope="col">Trade</th><th scope="col">Field</th><th scope="col">Sound</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Side</th>
+                <td><span class="tone-buy">Buys</span> push green, <span class="tone-sell">sells</span> push orange.</td>
+                <td>Buys sit higher in the register, sells sit lower.</td>
+              </tr>
+              <tr>
+                <th scope="row">Size</th>
+                <td>Bigger prints hit harder and spread wider.</td>
+                <td>Bigger prints strike harder and ring longer.</td>
+              </tr>
+              <tr>
+                <th scope="row">Price</th>
+                <td>Price sets the height where a print lands.</td>
+                <td>Price moves the pitch.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="landing-section markets reveal" id="markets">
+          <div class="markets-intro">
+            <h2>Pick a market and listen.</h2>
+            <p>Public trade data only. No wallet, no account, no orders. Sound starts when you enter.</p>
+          </div>
+          <div class="market-picks" aria-label="Enter the instrument on a market">
+            <button type="button" data-enter-app data-enter-market="BTC"><b>BTC</b><span>Bitcoin</span><i aria-hidden="true">&rarr;</i></button>
+            <button type="button" data-enter-app data-enter-market="ETH"><b>ETH</b><span>Ethereum</span><i aria-hidden="true">&rarr;</i></button>
+            <button type="button" data-enter-app data-enter-market="SOL"><b>SOL</b><span>Solana</span><i aria-hidden="true">&rarr;</i></button>
+            <button type="button" data-enter-app data-enter-market="HYPE"><b>HYPE</b><span>Hyperliquid</span><i aria-hidden="true">&rarr;</i></button>
+            <button class="market-picks-all" type="button" data-enter-app data-open-picker><b>All markets</b><span data-market-count>Every Hyperliquid perp</span><i aria-hidden="true">&rarr;</i></button>
+          </div>
+        </section>
+      </div>
+
+      <footer class="landing-footer">
+        <img src="/assets/liquidated_logo.svg" alt="Liquidated">
+        <p>Experimental market sonification. Not financial advice.</p>
+        <nav aria-label="Footer">
+          <a href="https://liquidated.gitbook.io/docs/" target="_blank" rel="noopener noreferrer">Docs</a>
+        </nav>
+      </footer>
+    </section>
+
+    <main class="app-shell">
+      <canvas id="flowCanvas" aria-label="Liquidated flow visualizer"></canvas>
+
+      <section class="feed-panel" aria-label="Market feed">
+        <a class="brand-home" href="/" aria-label="Back to Liquidated landing page">
+          <img class="brand-logo" src="/assets/liquidated_logo.svg" alt="Liquidated">
+        </a>
+        <button class="burger" id="burgerToggle" type="button" aria-label="Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="row-break" aria-hidden="true"></div>
+        <details class="pair-menu">
+          <summary id="symbolSummary">BTC</summary>
+          <div class="pair-options" aria-label="Instrument">
+            <input id="pairSearch" class="pair-search" type="search" placeholder="Search markets" aria-label="Search markets" autocomplete="off" spellcheck="false">
+            <div id="pairList" class="pair-list">
+              <button type="button" data-market="BTC"><span class="pair-symbol">BTC</span></button>
+              <button type="button" data-market="ETH"><span class="pair-symbol">ETH</span></button>
+              <button type="button" data-market="SOL"><span class="pair-symbol">SOL</span></button>
+              <button type="button" data-market="HYPE"><span class="pair-symbol">HYPE</span></button>
+            </div>
+          </div>
+        </details>
+        <div class="feed-toggle" aria-label="Shaping">
+          <button id="rawButton" type="button">Raw</button>
+          <button id="aggregatedButton" class="active" type="button">Aggregated</button>
+        </div>
+        <div class="feed-control range-control">
+          <span>Range</span>
+          <div class="dual-range">
+            <input id="minSize" type="range" min="0" max="1000" step="1" value="0">
+            <input id="maxSize" type="range" min="0" max="1001" step="1" value="1001">
+            <b id="minSizeValue">$1k</b>
+            <b id="maxSizeValue">∞</b>
+          </div>
+        </div>
+        <details class="group-menu">
+          <summary>
+            <span>Grouping</span>
+          </summary>
+          <div class="group-options" aria-label="Aggregation settings">
+            <div>
+              <span>ms</span>
+              <button type="button" data-aggregate-kind="window" data-aggregate-value="250">250</button>
+              <button type="button" data-aggregate-kind="window" data-aggregate-value="500">500</button>
+              <button type="button" data-aggregate-kind="window" data-aggregate-value="1000">1000</button>
+            </div>
+            <div>
+              <span>$</span>
+              <button type="button" data-aggregate-kind="bucket" data-aggregate-value="0">exact</button>
+              <button type="button" data-aggregate-kind="bucket" data-aggregate-value="0.01">0.01</button>
+              <button type="button" data-aggregate-kind="bucket" data-aggregate-value="0.1">0.10</button>
+              <button type="button" data-aggregate-kind="bucket" data-aggregate-value="0.5">0.50</button>
+              <button type="button" data-aggregate-kind="bucket" data-aggregate-value="1">1</button>
+              <button type="button" data-aggregate-kind="bucket" data-aggregate-value="5">5</button>
+            </div>
+          </div>
+        </details>
+        <div class="segment" aria-label="Sound">
+          <button id="muteButton" class="mute-button" type="button" aria-pressed="false" aria-label="Turn sound on" data-audio-state="muted">
+            <span class="sound-state-dot" aria-hidden="true"></span>
+            <span id="muteLabel">Sound off</span>
+          </button>
+          <span id="statusLight" class="status-light"></span>
+          <span id="statusText">Connecting</span>
+        </div>
+        <details class="resonator-menu">
+          <summary>Audio settings</summary>
+          <div class="resonator-controls">
+            <label>
+              <span>Max voices</span>
+              <input id="resMaxVoices" type="range" min="2" max="24" step="1" value="18">
+              <b id="resMaxVoicesValue">18</b>
+            </label>
+            <label>
+              <span>Frequency</span>
+              <input id="resFrequency" type="range" min="0" max="60" step="1" value="34">
+              <b id="resFrequencyValue">34 st</b>
+            </label>
+            <label>
+              <span>Structure</span>
+              <input id="resStructure" type="range" min="0" max="0.999" step="0.001" value="0.86">
+              <b id="resStructureValue">0.86</b>
+            </label>
+            <label>
+              <span>Base damping</span>
+              <input id="resBaseDamping" type="range" min="0" max="0.98" step="0.01" value="0.71">
+              <b id="resBaseDampingValue">0.71</b>
+            </label>
+            <label>
+              <span>Base position</span>
+              <input id="resBasePosition" type="range" min="0.02" max="0.98" step="0.01" value="0.63">
+              <b id="resBasePositionValue">0.63</b>
+            </label>
+            <label>
+              <span>Damping lift</span>
+              <input id="resDampingLift" type="range" min="0" max="0.35" step="0.01" value="0.14">
+              <b id="resDampingLiftValue">0.14</b>
+            </label>
+            <label>
+              <span>Position spread</span>
+              <input id="resPositionSpread" type="range" min="0.05" max="0.48" step="0.01" value="0.26">
+              <b id="resPositionSpreadValue">0.26</b>
+            </label>
+            <label>
+              <span>Brightness</span>
+              <input id="resBrightness" type="range" min="0.1" max="0.95" step="0.01" value="0.25">
+              <b id="resBrightnessValue">0.25</b>
+            </label>
+            <label>
+              <span>Release</span>
+              <input id="resRelease" type="range" min="0.1" max="4" step="0.05" value="2.30">
+              <b id="resReleaseValue">2.30s</b>
+            </label>
+            <button id="saveAudioSettings" class="save-audio-settings" type="button">Save</button>
+          </div>
+        </details>
+        <details class="liquid-menu">
+          <summary>Liquid settings</summary>
+          <div class="liquid-controls">
+            <label>
+              <span>mouseSize</span>
+              <input id="liqMouseSize" type="range" min="0" max="100" step="1" value="50">
+              <b id="liqMouseSizeValue">38</b>
+            </label>
+            <label>
+              <span>viscosity</span>
+              <input id="liqViscosity" type="range" min="0" max="100" step="1" value="50">
+              <b id="liqViscosityValue">0.996</b>
+            </label>
+            <label>
+              <span>waveHeight</span>
+              <input id="liqWaveHeight" type="range" min="0" max="100" step="1" value="50">
+              <b id="liqWaveHeightValue">1.95</b>
+            </label>
+            <button id="smoothWater" class="save-audio-settings" type="button">smoothWater</button>
+          </div>
+        </details>
+      </section>
+
+      <aside class="side-panel" aria-label="Flow tape">
+        <button class="tape-handle" id="tapeHandle" type="button" aria-label="Tape ein-/ausfahren"></button>
+        <ol id="eventTape" class="event-tape" aria-label="Recent flow events"></ol>
+        <div class="metric-grid">
+          <div>
+            <span>Buy Flow</span>
+            <strong id="buyFlow">$0</strong>
+          </div>
+          <div>
+            <span>Sell Flow</span>
+            <strong id="sellFlow">$0</strong>
+          </div>
+          <div>
+            <span>Liqs</span>
+            <strong id="liquidations">0</strong>
+          </div>
+          <div>
+            <span>Pulse</span>
+            <strong id="pulse">0</strong>
+          </div>
+        </div>
+
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>Pressure</span>
+            <strong id="pressureLabel">Neutral</strong>
+          </div>
+          <div class="meter">
+            <div id="pressureFill" class="meter-fill"></div>
+          </div>
+        </div>
+      </aside>
+
+      <a class="info-link" href="https://liquidated.gitbook.io/docs/" target="_blank" rel="noopener noreferrer" aria-label="Liquidated documentation on GitBook" title="Liquidated documentation on GitBook">i</a>
+
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050606">
+    <meta name="description" content="Liquidated liquid glass hero experiment driven by public Hyperliquid order flow.">
+    <title>Liquid Glass Study | Liquidated</title>
+    <link rel="stylesheet" href="/src/liquid-glass/liquid-glass.css">
+  </head>
+  <body>
+    <div class="storm" aria-hidden="true"></div>
+    <div class="glass-fallback" aria-hidden="true">
+      <span class="glass-fallback__body"></span>
+      <span class="glass-fallback__drop glass-fallback__drop--one"></span>
+      <span class="glass-fallback__drop glass-fallback__drop--two"></span>
+    </div>
+    <div id="glass-scene" aria-hidden="true"></div>
+
+    <header class="glass-nav">
+      <a class="glass-brand" href="/" aria-label="Back to Liquidated">
+        <img src="/assets/liquidated_logo.svg" alt="Liquidated">
+      </a>
+      <span>Material study</span>
+      <a href="/">Current landing</a>
+    </header>
+
+    <main class="glass-hero">
+      <div class="glass-copy">
+        <p class="glass-kicker"><i aria-hidden="true"></i><span id="stream-status">Connecting to BTC</span></p>
+        <h1>Pressure<br>becomes <em>glass.</em></h1>
+        <p class="glass-lede">Public order flow bends a reactive field of refraction, color and motion.</p>
+        <button class="glass-enter" type="button" id="disturb-field">Disturb the field</button>
+      </div>
+
+      <div class="glass-meta" aria-label="Visual mapping">
+        <span>Move to refract</span>
+        <span><b>Buy</b> cool edge</span>
+        <span><b>Sell</b> warm edge</span>
+      </div>
+    </main>
+
+    <script type="module" src="/src/liquid-glass/main.ts"></script>
+  </body>
+</html>
