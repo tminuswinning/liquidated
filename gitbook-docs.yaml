@@ -28,7 +28,7 @@ site:
           path: documentation
           default: true
           content:
-            directory: ./docs/documentation
+            directory: ./docs
             language: en
     - type: section
       key: section-3
